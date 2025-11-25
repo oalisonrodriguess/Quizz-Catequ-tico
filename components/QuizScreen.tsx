@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Question } from '../types';
-import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, BookOpenCheck, ExternalLink, Heart, Home, Bookmark, Copy, Check, MousePointerClick } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, BookOpenCheck, ExternalLink, Heart, Home, Bookmark, Copy, Check, MousePointerClick, AlertTriangle, LogOut } from 'lucide-react';
 
 interface QuizScreenProps {
   question: Question;
@@ -60,6 +60,7 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({
   const [imgSrc, setImgSrc] = useState<string>("");
   const [imgError, setImgError] = useState(false);
   const [animClass, setAnimClass] = useState("");
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Restore state or reset when question changes
   useEffect(() => {
@@ -166,7 +167,7 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({
       {/* Header Controls */}
       <div className="flex justify-between items-center mb-4 px-1">
         <button 
-          onClick={onBackToHome}
+          onClick={() => setShowExitModal(true)}
           className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300"
           title="Voltar ao início"
         >
@@ -328,6 +329,37 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Exit Confirmation Modal */}
+      {showExitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-2xl max-w-sm w-full text-center border-t-4 border-red-500 animate-pop">
+                <div className="flex justify-center mb-4">
+                   <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-full">
+                       <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                   </div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Abandonar Missão?</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  Se sair agora, todo o seu progresso nesta rodada será perdido.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                   <button
+                     onClick={() => setShowExitModal(false)}
+                     className="py-2 px-4 rounded-xl font-bold bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                   >
+                     Continuar
+                   </button>
+                   <button
+                     onClick={onBackToHome}
+                     className="py-2 px-4 rounded-xl font-bold bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-lg"
+                   >
+                     <LogOut className="w-4 h-4" /> Sair
+                   </button>
+                </div>
+             </div>
+        </div>
+      )}
     </div>
   );
 };

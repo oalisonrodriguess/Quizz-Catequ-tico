@@ -51,7 +51,7 @@ export const generateQuestions = async (topic: Topic | 'SAVED', difficulty: Diff
 
   const prompt = `
     Você é um especialista em teologia católica e catequese.
-    Crie ${count} perguntas de múltipla escolha para um "Quizz Catequético".
+    Crie ${count} perguntas de múltipla escolha para um "Quiz Catequético".
     
     ${topicInstruction}
     ${difficultyInstruction}

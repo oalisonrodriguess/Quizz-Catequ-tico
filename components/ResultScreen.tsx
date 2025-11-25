@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { RotateCcw, Trophy, Share2, Printer, Save, Copy } from 'lucide-react';
 import { QuizConfig, Question } from '../types';
@@ -12,6 +13,7 @@ interface ResultScreenProps {
   onRestart: () => void;
   onHome: () => void;
   onSaveScore: (name: string, group: string, region: string) => void;
+  onToast: (message: string, type: 'success' | 'info' | 'error') => void;
 }
 
 export const ResultScreen: React.FC<ResultScreenProps> = ({ 
@@ -22,7 +24,8 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
   isGameOver, 
   onRestart, 
   onHome,
-  onSaveScore 
+  onSaveScore,
+  onToast
 }) => {
   const [name, setName] = useState('');
   const [group, setGroup] = useState('');
@@ -78,22 +81,29 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     const topicLabel = config.topic === 'SAVED' ? 'Banco de Questões' : config.topic;
 
     const shareData = {
-      title: 'Quizz Catequético - Meu Resultado',
-      text: `✝️ *Quizz Catequético*\n\n🏆 Fiz *${score} de ${total}* pontos!\n📊 Dificuldade: *${difficultyLabel}*\n📖 Tema: _${topicLabel}_\n\nVenha testar seus conhecimentos sobre a fé católica! 👇`,
+      title: 'Quiz Catequético - Meu Resultado',
+      text: `✝️ *Quiz Catequético*\n\n🏆 Fiz *${score} de ${total}* pontos!\n📊 Dificuldade: *${difficultyLabel}*\n📖 Tema: _${topicLabel}_\n\nVenha testar seus conhecimentos sobre a fé católica! 👇`,
       url: window.location.href
     };
 
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.log("Error sharing", err);
-      }
-    } else {
-      // Fallback para área de transferência se o navegador não suportar share nativo
-      navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`)
-        .then(() => alert("Resultado copiado! Cole no WhatsApp ou Instagram."))
-        .catch(() => alert(`Pontuação: ${score}/${total}. Tire um print!`));
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+            onToast("Compartilhado com sucesso!", 'success');
+        } else {
+            // Fallback for desktop/non-secure
+            await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+            onToast("Resultado copiado para a área de transferência!", 'success');
+        }
+    } catch (err) {
+        console.error("Error sharing:", err);
+        // Fallback catch-all
+        try {
+            await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+            onToast("Copiado para a área de transferência!", 'success');
+        } catch (copyErr) {
+             onToast("Erro ao compartilhar. Tire um print!", 'error');
+        }
     }
   };
 
@@ -107,20 +117,21 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         spread: 70,
         origin: { y: 0.6 }
       });
+      onToast("Pontuação salva no Ranking!", 'success');
     }
   };
 
   const handlePrint = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
-        alert("Por favor, permita pop-ups para imprimir.");
+        onToast("Permita pop-ups para imprimir.", 'error');
         return;
     }
 
     const content = `
       <html>
         <head>
-          <title>Quizz Catequético - Impressão</title>
+          <title>Quiz Catequético - Impressão</title>
           <style>
             body { font-family: 'Times New Roman', serif; padding: 40px; }
             h1 { text-align: center; color: #000; }
@@ -136,7 +147,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
         </head>
         <body>
           <div class="header">
-            <h1>Quizz Catequético</h1>
+            <h1>Quiz Catequético</h1>
             <p><strong>Tópico:</strong> ${config.topic}</p>
             <p><strong>Dificuldade Geral:</strong> ${config.difficulty}</p>
             <p><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>

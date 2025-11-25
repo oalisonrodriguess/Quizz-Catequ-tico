@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Difficulty, Topic, QuizConfig, LeaderboardEntry, Question } from '../types';
 import { BookOpen, Church, Flame, ListOrdered, Trophy, Bookmark, Play, Users, Map as MapIcon, Trash2, Printer, Download, Heart, Brain, MousePointerClick } from 'lucide-react';
 
-export const APP_VERSION = "1.0.3";
+export const APP_VERSION = "1.1.0";
 
 interface WelcomeScreenProps {
   onStart: (config: QuizConfig) => void;
@@ -24,7 +24,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 }) => {
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.INICIANTE);
   const [topic, setTopic] = useState<Topic>(Topic.DIVERSOS);
-  const [numberOfQuestions, setNumberOfQuestions] = useState<number>(5);
+  const [numberOfQuestions, setNumberOfQuestions] = useState<number>(10);
   const [lives, setLives] = useState<number>(3);
   const [avoidRepeats, setAvoidRepeats] = useState<boolean>(false);
   const [confirmAnswer, setConfirmAnswer] = useState<boolean>(false);
@@ -68,7 +68,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
     const content = `
       <html>
         <head>
-          <title>Banco de Questões - Quizz Catequético</title>
+          <title>Banco de Questões - Quiz Catequético</title>
           <style>
             body { font-family: 'Times New Roman', serif; padding: 40px; }
             h1 { text-align: center; color: #000; }
@@ -133,7 +133,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
              </svg>
         </div>
         <Church className="w-16 h-16 text-church-gold mx-auto mb-4" />
-        <h1 className="text-4xl font-serif font-bold text-white mb-2">Quizz Catequético</h1>
+        <h1 className="text-4xl font-serif font-bold text-white mb-2">Quiz Catequético</h1>
         <p className="text-blue-100 font-sans">Teste e aprofunde sua fé</p>
       </div>
 
@@ -298,7 +298,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                   Criar com IA
                 </span>
               ) : (
-                "Gerar Quizz Online"
+                "Gerar Quiz Online"
               )}
             </button>
           </form>
