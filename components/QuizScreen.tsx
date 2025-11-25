@@ -153,6 +153,26 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({
     return `${baseStyle} border-gray-200 dark:border-gray-700 hover:border-church-blue dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-sm hover:shadow-md`;
   };
 
+  const getLetterBadgeStyles = (index: number) => {
+      const baseLetter = "w-8 h-8 flex items-center justify-center rounded-full font-bold mr-3 text-sm flex-shrink-0 border-2 transition-colors";
+      
+      if (isAnswered) {
+          if (index === question.correctOptionIndex) {
+              return `${baseLetter} bg-green-200 border-green-400 text-green-800 dark:bg-green-800 dark:border-green-500 dark:text-green-100`;
+          }
+          if (index === selectedOption) {
+              return `${baseLetter} bg-red-200 border-red-400 text-red-800 dark:bg-red-800 dark:border-red-500 dark:text-red-100`;
+          }
+          return `${baseLetter} bg-gray-100 border-gray-300 text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-500`;
+      }
+
+      if (requireConfirmation && index === tempSelectedOption) {
+          return `${baseLetter} bg-church-blue text-white border-church-blue dark:bg-blue-500 dark:border-blue-400`;
+      }
+
+      return `${baseLetter} bg-gray-100 border-gray-300 text-gray-500 group-hover:border-church-blue group-hover:bg-blue-100 group-hover:text-church-blue dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:group-hover:bg-blue-900/50 dark:group-hover:text-blue-300`;
+  };
+
   const getDifficultyColor = (diff?: string) => {
     if (!diff) return 'bg-gray-600';
     const d = diff.toLowerCase();
@@ -242,9 +262,14 @@ export const QuizScreen: React.FC<QuizScreenProps> = ({
                 onKeyDown={(e) => !isAnswered && handleKeyDown(e, idx)}
                 className={getOptionStyles(idx)}
               >
-                <span className="font-medium text-lg relative z-10 flex-1 pr-2">{option}</span>
+                <div className="flex items-center flex-1">
+                    <span className={getLetterBadgeStyles(idx)}>
+                        {String.fromCharCode(65 + idx)}
+                    </span>
+                    <span className="font-medium text-lg relative z-10 flex-1 pr-2">{option}</span>
+                </div>
                 
-                <div className="flex items-center gap-2 relative z-20">
+                <div className="flex items-center gap-2 relative z-20 pl-2">
                   <CopyButton text={option} />
                   
                   {isAnswered && idx === question.correctOptionIndex && (

@@ -19,8 +19,8 @@ export enum Topic {
 export interface Question {
   id: string;
   questionText: string;
-  options: string[]; // Array of 5 options (A-E)
-  correctOptionIndex: number; // 0-4
+  options: string[]; // Array of 4 options (A-D)
+  correctOptionIndex: number; // 0-3
   explanation: string;
   imageKeyword: string; // Keyword to generate the image
   moreInfoUrl?: string; // Optional URL for further reading

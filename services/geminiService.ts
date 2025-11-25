@@ -60,7 +60,7 @@ export const generateQuestions = async (topic: Topic | 'SAVED', difficulty: Diff
 
     Requisitos:
     - As perguntas devem ser doutrinariamente corretas conforme o Catecismo da Igreja Católica (CIC).
-    - Gere EXATAMENTE 5 opções de resposta (A, B, C, D, E) para cada pergunta.
+    - Gere EXATAMENTE 4 opções de resposta (A, B, C, D) para cada pergunta.
     - ${brevityInstruction}
     - A explicação deve ser breve e educativa.
     - O campo 'imageKeyword' deve ser uma palavra-chave simples em INGLÊS que descreva visualmente o tema da pergunta (ex: 'chalice', 'bible', 'jesus', 'rosary') para gerar uma imagem.
@@ -84,10 +84,10 @@ export const generateQuestions = async (topic: Topic | 'SAVED', difficulty: Diff
               options: { 
                 type: Type.ARRAY, 
                 items: { type: Type.STRING },
-                minItems: 5,
-                maxItems: 5
+                minItems: 4,
+                maxItems: 4
               },
-              correctOptionIndex: { type: Type.INTEGER, description: "Index (0-4) of the correct answer" },
+              correctOptionIndex: { type: Type.INTEGER, description: "Index (0-3) of the correct answer" },
               explanation: { type: Type.STRING, description: "Short explanation of why the answer is correct" },
               imageKeyword: { type: Type.STRING, description: "English keyword for image generation" },
               moreInfoUrl: { type: Type.STRING, description: "Google Search URL or Wikipedia URL" },
@@ -127,7 +127,7 @@ export const generateQuestions = async (topic: Topic | 'SAVED', difficulty: Diff
       {
         id: "fallback-1",
         questionText: "Ocorreu um erro ao gerar perguntas novas. Quem é a mãe de Jesus?",
-        options: ["Santa Ana", "Maria", "Santa Isabel", "Maria Madalena", "Marta"],
+        options: ["Santa Ana", "Maria", "Santa Isabel", "Maria Madalena"],
         correctOptionIndex: 1,
         explanation: "Maria é a Mãe de Deus (Theotokos) e mãe de Jesus, concebida sem pecado original.",
         imageKeyword: "virgin mary",

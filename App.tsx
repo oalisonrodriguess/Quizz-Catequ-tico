@@ -207,7 +207,7 @@ const App: React.FC = () => {
 
   return (
     <div className={isDarkMode ? "dark" : ""}>
-      <div className="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center p-4 relative overflow-hidden">
         
         {/* Background Pattern */}
         <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" 
@@ -241,7 +241,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <div className="z-10 w-full flex justify-center">
+        <div className="z-10 w-full flex-1 flex items-center justify-center my-4">
           {gameState === 'welcome' && (
             <WelcomeScreen 
               onStart={handleStartQuiz} 
@@ -291,6 +291,21 @@ const App: React.FC = () => {
             />
           )}
         </div>
+
+        {/* Footer */}
+        <footer className="z-10 text-center text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 pb-2 pt-4 font-medium animate-fade-in">
+          <p>
+            Criado em 2025 por <span className="font-bold text-gray-600 dark:text-gray-400">Alison Fernando Rodrigues dos Santos</span>
+          </p>
+          <p className="mt-0.5">
+             (Instagram: <a href="https://www.instagram.com/oalison.rodrigues/" target="_blank" rel="noopener noreferrer" className="hover:text-church-blue dark:hover:text-blue-400 transition-colors">@oalison.rodrigues</a>)
+          </p>
+          <p className="mt-1.5 flex items-center justify-center gap-1.5 opacity-90">
+            <span>Equipado com</span>
+            <span className="font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">Gemini 3.0 Pro</span>
+            <span>da Google</span>
+          </p>
+        </footer>
 
         {/* Toast Notification */}
         {toast && (

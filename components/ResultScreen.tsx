@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { RotateCcw, Trophy, Share2, Printer, Save, Copy } from 'lucide-react';
+import { RotateCcw, Trophy, Share2, Printer, Save, FileText } from 'lucide-react';
 import { QuizConfig, Question } from '../types';
 import confetti from 'canvas-confetti';
 
@@ -80,30 +80,64 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
     const difficultyLabel = config.topic === 'SAVED' ? 'Misto (Salvas)' : config.difficulty;
     const topicLabel = config.topic === 'SAVED' ? 'Banco de Questões' : config.topic;
 
-    const shareData = {
+    const currentUrl = window.location.href;
+    // Check if URL is valid for sharing (must be http or https)
+    const isValidUrl = currentUrl.startsWith('http://') || currentUrl.startsWith('https://');
+
+    const shareData: ShareData = {
       title: 'Quiz Catequético - Meu Resultado',
       text: `✝️ *Quiz Catequético*\n\n🏆 Fiz *${score} de ${total}* pontos!\n📊 Dificuldade: *${difficultyLabel}*\n📖 Tema: _${topicLabel}_\n\nVenha testar seus conhecimentos sobre a fé católica! 👇`,
-      url: window.location.href
     };
 
+    if (isValidUrl) {
+      shareData.url = currentUrl;
+    }
+
     try {
-        if (navigator.share) {
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
             await navigator.share(shareData);
             onToast("Compartilhado com sucesso!", 'success');
         } else {
-            // Fallback for desktop/non-secure
-            await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
-            onToast("Resultado copiado para a área de transferência!", 'success');
+            // Fallback for desktop/non-secure or if navigator.share fails validation
+            throw new Error("Share API not supported or rejected");
         }
     } catch (err) {
-        console.error("Error sharing:", err);
-        // Fallback catch-all
+        console.warn("Native share failed, falling back to clipboard:", err);
+        // Fallback catch-all: Copy text to clipboard
         try {
-            await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
-            onToast("Copiado para a área de transferência!", 'success');
+            const clipboardText = `${shareData.text}\n${isValidUrl ? shareData.url : ''}`;
+            await navigator.clipboard.writeText(clipboardText);
+            onToast("Resultado copiado para a área de transferência!", 'success');
         } catch (copyErr) {
              onToast("Erro ao compartilhar. Tire um print!", 'error');
         }
+    }
+  };
+
+  const handleCopyAll = async () => {
+    let text = `✝️ QUIZ CATEQUÉTICO - RESUMO DE ESTUDO\n`;
+    text += `-----------------------------------\n`;
+    text += `Tema: ${config.topic === 'SAVED' ? 'Banco de Questões' : config.topic}\n`;
+    text += `Dificuldade: ${config.difficulty}\n`;
+    text += `Pontuação: ${score}/${total}\n`;
+    text += `Data: ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+
+    questions.forEach((q, i) => {
+        text += `QUESTÃO ${i + 1}:\n`;
+        text += `${q.questionText}\n`;
+        text += `✅ Resposta Correta: ${q.options[q.correctOptionIndex]}\n`;
+        text += `📖 Explicação: ${q.explanation}\n`;
+        text += `-----------------------------------\n`;
+    });
+
+    text += `\nGerado pelo app Quiz Catequético`;
+
+    try {
+        await navigator.clipboard.writeText(text);
+        onToast("Resumo copiado para a área de transferência!", 'success');
+    } catch (err) {
+        console.error("Error copying text:", err);
+        onToast("Erro ao copiar texto.", 'error');
     }
   };
 
@@ -150,7 +184,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
             <h1>Quiz Catequético</h1>
             <p><strong>Tópico:</strong> ${config.topic}</p>
             <p><strong>Dificuldade Geral:</strong> ${config.difficulty}</p>
-            <p><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+            <p><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}\n</p>
             <p><strong>Nome:</strong> __________________________________________</p>
           </div>
           
@@ -260,7 +294,7 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
       )}
 
       <div className="space-y-3">
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={onRestart}
             className="col-span-1 bg-church-blue text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors flex flex-col items-center justify-center gap-1 shadow-lg text-xs sm:text-sm"
@@ -283,6 +317,14 @@ export const ResultScreen: React.FC<ResultScreenProps> = ({
           >
              <Printer className="w-5 h-5" />
              Imprimir
+          </button>
+
+          <button
+             onClick={handleCopyAll}
+             className="col-span-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors flex flex-col items-center justify-center gap-1 shadow-lg text-xs sm:text-sm"
+          >
+             <FileText className="w-5 h-5" />
+             Copiar Texto
           </button>
         </div>
 
