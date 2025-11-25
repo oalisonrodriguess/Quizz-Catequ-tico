@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz Catequético</title>
+    <!-- Keeping Tailwind CDN for simplicity, though PostCSS is recommended for production -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script>
@@ -59,18 +60,17 @@
         },
       }
     </script>
-    <style>
-      /* Styles moved to App.tsx for dynamic dark mode support */
-    </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "canvas-confetti": "https://ga.jspm.io/npm:canvas-confetti@1.9.2/dist/confetti.module.mjs"
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "canvas-confetti": "https://aistudiocdn.com/canvas-confetti@^1.9.4"
   }
 }
 </script>
