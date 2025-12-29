@@ -1,4 +1,5 @@
 
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { Difficulty, Topic, Question } from "../types";
 
@@ -9,7 +10,8 @@ export const generateQuestions = async (topic: Topic | 'SAVED', difficulty: Diff
   // If playing from saved, we don't generate new ones here (handled in App.tsx)
   if (topic === 'SAVED') return [];
 
-  const modelName = "gemini-2.5-flash";
+  // FIX: Updated model to gemini-3-pro-preview for complex text generation as per guidelines.
+  const modelName = "gemini-3-pro-preview";
   
   let topicInstruction = `Tópico: ${topic}`;
   if (topic === Topic.DIVERSOS) {

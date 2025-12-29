@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Difficulty, Topic, QuizConfig, LeaderboardEntry, Question } from '../types';
-import { BookOpen, Church, Flame, ListOrdered, Trophy, Bookmark, Play, Users, Map as MapIcon, Trash2, Printer, Download, Heart, Brain, MousePointerClick } from 'lucide-react';
+import { BookOpen, Church, Flame, ListOrdered, Trophy, Bookmark, Play, Users, Map as MapIcon, Trash2, Printer, Download, Heart, Brain, MousePointerClick, Zap, ArrowRight } from 'lucide-react';
 
 export const APP_VERSION = "1.1.0";
 
@@ -41,6 +41,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       lives,
       avoidRepeats,
       confirmAnswer
+    });
+  };
+
+  const handleQuickStart = () => {
+    onStart({
+      difficulty: Difficulty.INICIANTE,
+      topic: Topic.DIVERSOS,
+      numberOfQuestions: 10,
+      lives: 3,
+      avoidRepeats: false,
+      confirmAnswer: false
     });
   };
 
@@ -164,6 +175,37 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
         {/* SETUP TAB */}
         {activeTab === 'setup' && (
           <form onSubmit={handleSubmit} className="p-8 space-y-5 animate-fade-in">
+            
+            {/* Quick Start Button */}
+            <button
+              type="button"
+              onClick={handleQuickStart}
+              disabled={isLoading}
+              className={`
+                w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700
+                text-white py-3 px-4 rounded-xl font-bold shadow-lg flex items-center justify-between group
+                transition-all transform active:scale-95 border border-emerald-400/50
+                ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
+            >
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-full">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <div className="text-left">
+                  <div className="text-sm font-bold uppercase tracking-wider opacity-95">Jogo Rápido</div>
+                  <div className="text-[10px] font-normal opacity-80">Diversos • Iniciante • 10 Perguntas</div>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+            </button>
+
+            <div className="relative flex py-1 items-center">
+                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+                <span className="flex-shrink-0 mx-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Ou personalize</span>
+                <div className="flex-grow border-t border-gray-200 dark:border-gray-700"></div>
+            </div>
+
             {/* Topic Selection */}
             <div>
               <label className="block text-gray-700 dark:text-gray-200 font-bold mb-2 flex items-center gap-2">
